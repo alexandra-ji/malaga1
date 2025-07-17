@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descubre Málaga - Santander</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300"><defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23667eea;stop-opacity:0.1" /><stop offset="100%" style="stop-color:%23764ba2;stop-opacity:0.1" /></linearGradient></defs><path d="M0,100 Q250,50 500,100 T1000,100 V300 H0 Z" fill="url(%23grad1)"/></svg>') center/cover;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(255,255,255,0.05) 0%, transparent 50%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 20px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .hero-badge {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 10px 25px;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: inline-block;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px 30px 0 0;
+            margin-top: -50px;
+            padding: 60px 40px 80px 40px;
+            position: relative;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            color: #2d3748;
+            font-size: 2.8rem;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .place-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            height: 100%;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .place-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.3);
+        }
+
+        .card-image-container {
+            position: relative;
+            overflow: hidden;
+            height: 280px;
+        }
+
+        .place-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .place-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .place-card:hover .card-overlay {
+            opacity: 1;
+        }
+
+        .overlay-icon {
+            color: white;
+            font-size: 3rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .card-content {
+            padding: 25px;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+
+        .card-description {
+            color: #718096;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .card-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .category-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: floatAround 20s infinite linear;
+        }
+
+        @keyframes floatAround {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
+        }
+
+        .floating-element:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+            font-size: 2rem;
+        }
+
+        .floating-element:nth-child(2) {
+            left: 20%;
+            animation-delay: 5s;
+            font-size: 1.5rem;
+        }
+
+        .floating-element:nth-child(3) {
+            left: 80%;
+            animation-delay: 10s;
+            font-size: 2.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .main-container {
+                padding: 40px 20px 60px 20px;
+                margin-top: -30px;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <i class="fas fa-church floating-element"></i>
+        <i class="fas fa-landmark floating-element"></i>
+        <i class="fas fa-mountain floating-element"></i>
+    </div>
+
+    <header class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">Descubre Málaga</h1>
+            <div class="hero-badge">
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="container">
+            <h2 class="section-title">Lugares Emblemáticos</h2>
+            
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <!-- Lugar 1: Escudo -->
+                <div class="col">
+                    <div class="place-card">
+                        <div class="card-image-container">
+                            <img src="imagenes/ESCUDO.png" alt="Escudo de Málaga">
+                            <div class="card-overlay">
+                                <i class="fas fa-shield-alt overlay-icon"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h5 class="card-title">
+                                <i class="fas fa-shield-alt"></i>
+                                Escudo de Málaga
+                            </h5>
+                            <p class="card-description">
+                                Símbolo heráldico que representa la identidad histórica y cultural de Málaga. Este emblemático escudo refleja los valores, tradiciones y el legado ancestral de nuestro municipio santandereano.
+                            </p>
+                            <div class="card-info">
+                                <span class="category-badge">Símbolo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lugar 2: Estatua -->
+                <div class="col">
+                    <div class="place-card">
+                        <div class="card-image-container">
+                            <img src="imagenes/IMAGEN2.jpg"  width="800" height="900" class="card-img-top" alt="lugares">> 
+                            <div class="card-overlay">
+                                <i class="fas fa-monument overlay-icon"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h5 class="card-title">
+                                <i class="fas fa-monument"></i>
+                                Estatua Conmemorativa
+                            </h5>
+                            <p class="card-description">
+                                Monumento que honra la memoria histórica y rinde homenaje a personajes importantes de Málaga. Una obra escultórica que representa la identidad cultural y el orgullo de sus habitantes.
+                            </p>
+                            <div class="card-info">
+                                <span class="category-badge">Monumento</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lugar 3: Plazoleta del Parque -->
+                <div class="col">
+                    <div class="place-card">
+                        <div class="card-image-container">
+                            <img src="imagenes/plazoleta .jpg" alt="Plazoleta del Parque">
+                            <div class="card-overlay">
+                                <i class="fas fa-tree overlay-icon"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h5 class="card-title">
+                                <i class="fas fa-tree"></i>
+                                Plazoleta del Parque
+                            </h5>
+                            <p class="card-description">
+                                Hermoso espacio verde en el corazón de Málaga, ideal para el descanso y la recreación familiar. Un lugar de encuentro social rodeado de naturaleza y tranquilidad urbana.
+                            </p>
+                            <div class="card-info">
+                                <span class="category-badge">Recreación</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lugar 4: Alcaldía -->
+                <div class="col">
+                    <div class="place-card">
+                        <div class="card-image-container">
+                            <img src="imagenes/alcaldia.jpg" alt="Edificio de la Alcaldía">
+                            <div class="card-overlay">
+                                <i class="fas fa-landmark overlay-icon"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h5 class="card-title">
+                                <i class="fas fa-landmark"></i>
+                                Alcaldía Municipal
+                            </h5>
+                            <p class="card-description">
+                                Sede del gobierno local y centro administrativo de Málaga. Edificio institucional donde se toman las decisiones importantes para el desarrollo y bienestar de la comunidad.
+                            </p>
+                            <div class="card-info">
+                                <span class="category-badge">Institucional</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lugar 5: Iglesia Catedral -->
+                <div class="col">
+                    <div class="place-card">
+                        <div class="card-image-container">
+                            <img src="imagenes/catedral.jpg" alt="Iglesia Catedral">
+                            <div class="card-overlay">
+                                <i class="fas fa-church overlay-icon"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h5 class="card-title">
+                                <i class="fas fa-church"></i>
+                                Iglesia Catedral
+                            </h5>
+                            <p class="card-description">
+                                Majestuoso templo religioso que constituye el corazón espiritual de Málaga. Su arquitectura colonial y su importancia histórica la convierten en un patrimonio invaluable de la fe católica.
+                            </p>
+                            <div class="card-info">
+                                <span class="category-badge">Religioso</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lugar 6: Capilla Sagrado Corazón -->
+                <div class="col">
+                    <div class="place-card">
+                        <div class="card-image-container">
+                            <img src="imagenes/sagrado corazon+.jpg" alt="Capilla Sagrado Corazón">
+                            <div class="card-overlay">
+                                <i class="fas fa-heart overlay-icon"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h5 class="card-title">
+                                <i class="fas fa-heart"></i>
+                                Capilla Sagrado Corazón
+                            </h5>
+                            <p class="card-description">
+                                Íntima capilla dedicada al Sagrado Corazón de Jesús, lugar de devoción y recogimiento espiritual. Su arquitectura sencilla pero emotiva invita a la oración y la reflexión.
+                            </p>
+                            <div class="card-info">
+                                <span class="category-badge">Religioso</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lugar 7: Casa Asilo San Antonio -->
+                <div class="col">
+                    <div class="place-card">
+                        <div class="card-image-container">
+                            <img src="imagenes/asilo.jpg" alt="Casa Asilo San Antonio">
+                            <div class="card-overlay">
+                                <i class="fas fa-home overlay-icon"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h5 class="card-title">
+                                <i class="fas fa-home"></i>
+                                Casa Asilo San Antonio
+                            </h5>
+                            <p class="card-description">
+                                Institución benéfica dedicada al cuidado y atención de personas mayores. Ejemplo de solidaridad y compromiso social que refleja los valores humanitarios de la comunidad malagueña.
+                            </p>
+                            <div class="card-info">
+                                <span class="category-badge">Social</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lugar 8: Colegio Rosario -->
+                <div class="col">
+                    <div class="place-card">
+                        <div class="card-image-container">
+                            <img src="imagenes/rOSARIO.jpg" alt="Colegio Rosario">
+                            <div class="card-overlay">
+                                <i class="fas fa-school overlay-icon"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h5 class="card-title">
+                                <i class="fas fa-school"></i>
+                                Colegio Rosario
+                            </h5>
+                            <p class="card-description">
+                                Institución educativa emblemática que ha formado generaciones de malagueños. Centro de conocimiento y formación integral donde se forja el futuro de la comunidad.
+                            </p>
+                            <div class="card-info">
+                                <span class="category-badge">Educativo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lugar 9: Plaza de Mercado -->
+                <div class="col">
+                    <div class="place-card">
+                        <div class="card-image-container">
+                            <img src="imagenes/PLAZA DE MERCADO.jpg" alt="Plaza de Mercado">
+                            <div class="card-overlay">
+                                <i class="fas fa-store overlay-icon"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h5 class="card-title">
+                                <i class="fas fa-store"></i>
+                                Plaza de Mercado
+                            </h5>
+                            <p class="card-description">
+                                Corazón comercial de Málaga donde convergen tradición y comercio local. Lugar vibrante lleno de colores, sabores y la calidez humana que caracteriza a los mercados tradicionales.
+                            </p>
+                            <div class="card-info">
+                                <span class="category-badge">Comercial</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lugar 10: Terminal de Cotrans -->
+                <div class="col">
+                    <div class="place-card">
+                        <div class="card-image-container">
+                            <img src="imagenes/TERMINAL.webp" alt="Terminal de Cotrans">
+                            <div class="card-overlay">
+                                <i class="fas fa-bus overlay-icon"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h5 class="card-title">
+                                <i class="fas fa-bus"></i>
+                                Terminal de Cotrans
+                            </h5>
+                            <p class="card-description">
+                                Principal terminal de transporte que conecta Málaga con diferentes destinos. Punto de encuentro de viajeros y puerta de entrada que une nuestro municipio con el mundo.
+                            </p>
+                            <div class="card-info">
+                                <span class="category-badge">Transporte</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lugar 11: Hospital -->
+                <div class="col">
+                    <div class="place-card">
+                        <div class="card-image-container">
+                            <img src="imagenes/HOSPITAL.jpg" alt="Hospital de Málaga">
+                            <div class="card-overlay">
+                                <i class="fas fa-hospital overlay-icon"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h5 class="card-title">
+                                <i class="fas fa-hospital"></i>
+                                Hospital de Málaga
+                            </h5>
+                            <p class="card-description">
+                                Centro de salud que vela por el bienestar y la salud de la comunidad malagueña. Institución vital que brinda atención médica y representa la esperanza y cuidado de nuestros habitantes.
+                            </p>
+                            <div class="card-info">
+                                <span class="category-badge">Salud</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lugar 12: Monumento Virgen del Carmen -->
+                <div class="col">
+                    <div class="place-card">
+                        <div class="card-image-container">
+                            <img src="imagenes/salida de3 la virgen.png" alt="Monumento Virgen del Carmen">
+                            <div class="card-overlay">
+                                <i class="fas fa-praying-hands overlay-icon"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h5 class="card-title">
+                                <i class="fas fa-praying-hands"></i>
+                                Monumento Virgen del Carmen
+                            </h5>
+                            <p class="card-description">
+                                Monumento dedicado a la Virgen del Carmen, patrona espiritual de Málaga. Lugar de devoción y fe que representa la profunda religiosidad y tradición católica de nuestro pueblo.
+                            </p>
+                            <div class="card-info">
+                                <span class="category-badge">Religioso</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
